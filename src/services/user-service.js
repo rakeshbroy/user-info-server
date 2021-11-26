@@ -35,7 +35,8 @@ export class UserService {
   }
 
   async getAllUsers() {
-    let query = `select id, firstName, lastName, email, mobile from ${table.users}`;
+    const condition = ' where deletedAt is null';
+    let query = `select id, firstName, lastName, email, mobile from ${table.users} ${condition}`;
     return await SqlService.executeQuery(query);
   }
 
@@ -50,5 +51,11 @@ export class UserService {
     let query = `select * from ${table.users} ${condition}`;
     let users = await SqlService.executeQuery(query);
     return users[0];
+  }
+
+  async deletesUser(user) {
+    const condition = ` where id = ${user.id}`;
+    let query = `update ${table.users} set deletedAt = utc_timestamp() ${condition}`
+    return await SqlService.executeQuery(query);
   }
 }

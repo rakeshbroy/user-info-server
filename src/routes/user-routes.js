@@ -93,6 +93,32 @@ export class UserRoutes {
           log.e(`${req.method}: ${req.url}`, e);
           return res.sendStatus(e);
         }
+      })
+      .post('/delete-user', async (req, res) => {
+        try {
+          const userData = req.body;
+          let user = await this.userService.getUserById(userData);
+          if (user) {
+            let result = await this.userService.deletesUser(userData);
+              if (result) {
+                return res.json({
+                  error: false,
+                  message: "Deleted successfully.",
+                  data: [],
+                });
+              } else {
+                return res.json({
+                  error: true,
+                  message: "Deletion failed",
+                  data: [],
+                });
+              }
+          }
+
+        } catch(e) {
+          log.e(`${req.method}: ${req.url}`, e);
+          return res.sendStatus(e);
+        }
       });
   }
 }
